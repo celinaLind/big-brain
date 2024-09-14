@@ -21,8 +21,8 @@ export default function Home() {
         >Click Me</button>
 
         {/* since we are querying through ALL the documents this will automatically update as changes occur */}
-        {documents?.map((document) => (
-          <div key={document._id}>{document.title}</div>  
+        {documents?.map((doc) => (
+          <div key={doc._id}>{doc.title}</div>  
         ))}
       </Authenticated>
       </main>
