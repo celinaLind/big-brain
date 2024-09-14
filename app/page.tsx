@@ -1,5 +1,7 @@
 'use client'
 
+import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 import { api } from "@/convex/_generated/api";
 import { SignInButton, UserButton} from "@clerk/nextjs";
 import { Authenticated, Unauthenticated, useMutation, useQuery } from "convex/react";
@@ -11,14 +13,15 @@ export default function Home() {
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+      <main className="flex flex-col gap-8 row-start-2 items-center ">
       <Unauthenticated>
         <SignInButton />
       </Unauthenticated>
       <Authenticated>
         <UserButton />
-        <button onClick={() => createDocument({ title: "Hello, World!" })}
-        >Click Me</button>
+        <ModeToggle />
+        <Button onClick={() => createDocument({ title: "Hello, World!" })}
+        >Click Me</Button>
 
         {/* since we are querying through ALL the documents this will automatically update as changes occur */}
         {documents?.map((doc) => (
