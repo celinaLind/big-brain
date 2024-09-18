@@ -21,6 +21,7 @@ import { useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { Loader2 } from "lucide-react"
 import { LoadingButton } from "@/components/loading-btn"
+import { Id } from "@/convex/_generated/dataModel"
 
 const formSchema = z.object({
   title: z.string().min(2, 
@@ -30,6 +31,7 @@ const formSchema = z.object({
 ).max(50, {
     message: "Document title must be less than 50 characters long",
 }),
+    file: z.instanceof(File),
 })
 
 
@@ -37,24 +39,32 @@ export function UploadDocumentForm({ onUpload }: { onUpload: () => void }) {
     // 3. Define a mutation hook.
     // This will create a new document with the title provided.
   const createDocument = useMutation(api.documents.createDocument);
+  const generateUploadUrl = useMutation(api.documents.generateUploadUrl);
 
      // 1. Define your form.
     //  z.infer through the formSchema allows us to have more type safe code
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-    },
   })
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    //sleep 2 seconds to show loader
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    const url = await generateUploadUrl();
+
+    const result = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": values.file.type },
+        body: values.file,
+    });
+    const { storageId } = await result.json();
+
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    // console.log(values)
-    await createDocument(values)
+
+    await createDocument({
+        title: values.title,
+        fileId: storageId as Id<'_storage'>,
+    })
     // Close the dialog
     onUpload()
   }
@@ -63,16 +73,42 @@ export function UploadDocumentForm({ onUpload }: { onUpload: () => void }) {
         <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                        <Input {...field} />
+                    </FormControl>
+                    <FormDescription>
+                        Displayed as the title of the document.
+                    </FormDescription>
+                    <FormMessage />
+                </FormItem>
+            )}
+        />
+        <FormField
           control={form.control}
-          name="title"
-          render={({ field }) => (
+          name="file"
+          render={({ field: { value, onChange, ...fieldProps } }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel>File</FormLabel>
               <FormControl>
-                <Input placeholder="Business Document" {...field} />
+                <Input 
+                {...fieldProps}
+                type="file" 
+                accept=".txt,.xml,.doc"
+                onChange={(event) => {
+                    const file = event.target.files?.[0]
+                    if (file) {
+                        onChange(file)
+                    }
+                }}
+                />
               </FormControl>
               <FormDescription>
-                This is your public display name.
+                Choose a file to upload.
               </FormDescription>
               <FormMessage />
             </FormItem>
