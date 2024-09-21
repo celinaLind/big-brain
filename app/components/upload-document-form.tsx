@@ -4,8 +4,6 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
-import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -19,7 +17,6 @@ import { Input } from "@/components/ui/input"
 import { createDocument } from "@/convex/documents"
 import { useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
-import { Loader2 } from "lucide-react"
 import { LoadingButton } from "@/components/loading-btn"
 import { Id } from "@/convex/_generated/dataModel"
 

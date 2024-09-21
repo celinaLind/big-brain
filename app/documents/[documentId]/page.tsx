@@ -58,7 +58,7 @@ export default function DocumentPage({
     }
 
     return (
-        <main className="p-24 space-y-8">
+        <main className="p-24 pt-8 space-y-8">
             <div className="flex justify-between items-center">
                 <h1 className="text-4xl font-bold">{doc.title}</h1>
             </div>

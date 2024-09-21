@@ -1,5 +1,26 @@
 import { v } from "convex/values";
-import { internalMutation } from "./_generated/server";
+import { internalMutation, query } from "./_generated/server";
+
+// Frontend query to provide history of chats for a document
+export const getChatsForDocument = query({
+    args: {
+        documentId: v.id('documents')
+    },
+    async handler(ctx, args) {
+        const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
+
+        if (!userId) {
+            return [];
+        }
+
+        return await ctx.db.query('chats')
+            .withIndex('by_documentId_tokenIdentifier', (q) => 
+                q.eq('documentId', args.documentId)
+                .eq('tokenIdentifier', userId)
+        )
+            .collect();
+    }
+})
 
 export const createChatRecord = internalMutation({
     args: {

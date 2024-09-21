@@ -1,73 +1,40 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useAction, useQuery } from "convex/react"
-import { Input } from "@/components/ui/input"; // Assuming you have a custom Input component
-import { useEffect, useState } from "react";
+import { useQuery } from "convex/react"
 import { cn } from "@/lib/utils";
+import { QuestionForm } from "./question-form";
 
 export default function ChatPanel({
     documentId
 }: {
     documentId: Id<"documents">
 }) {
-    const askQuestion = useAction(api.documents.askQuestion);
+    const chats = useQuery(api.chats.getChatsForDocument, { documentId });
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const form = event.target as HTMLFormElement;
-        const formData = new FormData(form);
-        const text = formData.get("text") as string;
-
-        // Debugging logs
-        console.log("Form submitted");
-        console.log("text: ", text);
-        console.log("documentId: ", documentId);
-
-        if (!text) {
-            console.error("Text is empty");
-            return;
-        }
-
-        if (!documentId) {
-            console.error("Document ID is missing");
-            return;
-        }
-
-        try {
-            await askQuestion({ question: text, documentId });
-            console.log("askQuestion function called successfully");
-        } catch (error) {
-            console.error("Error calling askQuestion: ", error);
-        }
-    };
 
     return (
-        <div className=" p-2 bg-secondary flex-col justify-between rounded">
-            <div className="overflow-y-auto h-[350px] space-y-2">
+        <div className=" p-4 bg-secondary flex-col justify-between rounded-xl">
+            <div className="overflow-y-auto h-[350px] space-y-2 pb-2">
                 <div className={cn({
-                    "bg-slate-950": true},
-                    "p-2 rounded"
+                    "bg-slate-900": true},
+                    "p-2 rounded text-white"
                 )}>
                     AI: Ask any questions about the document here.
                 </div>
-                <div className={cn({
-                    "bg-slate-800": true},
-                    "p-2 rounded text-right"
-                )}>
-                    AI: Ask any questions about the document here.
-                </div>
-                {/* Chat messages go here */}
+                {chats?.map((chat) => (
+                    <div className={cn({
+                        "bg-slate-900": !chat.isHuman,
+                        "bg-slate-500": chat.isHuman,
+                        'text-right': chat.isHuman,
+                    }, "p-2 rounded whitespace-pre-line  text-white")}>
+                        {chat.text}
+                    </div>
+                ))}
             </div>
             <div className="flex gap-1">
-                <form onSubmit={handleSubmit} className="flex-1">
-                    <div className="flex gap-2">
-                        <Input required name="text" type="text" placeholder="Type a message..." />
-                        <Button>Send</Button>
-                    </div>
-                </form>
+                <QuestionForm documentId={documentId} />
             </div>
         </div>
     )
