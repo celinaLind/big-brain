@@ -23,7 +23,7 @@ export default function Home() {
           <CreateDocumentBtn />
         </div>
         {!documents && (
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 gap-4">
          {new Array(8).fill(0).map((_, i) => (
           <Card className="p-6 flex flex-col justify-between gap-2" >
           <Skeleton className="h-[40px]" />
@@ -35,7 +35,7 @@ export default function Home() {
           </div>
          )} 
          {documents && documents.length === 0 && (
-        <div className="m-auto flex flex-col justify-center gap-6 items-center">
+        <div className="p-8 flex flex-col justify-center gap-8 items-center">
           {/* since we are querying through ALL the documents this will automatically update as changes occur */}
           <Image
             src="/documents.svg"
@@ -48,7 +48,7 @@ export default function Home() {
         </div>
          )}
         {documents && documents.length > 0 && (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {/* since we are querying through ALL the documents this will automatically update as changes occur */}
           {documents?.map((doc) => <DocumentCard document={doc} />)}
         </div>

@@ -1,5 +1,5 @@
 // functions to interact with the documents collection
-import { action, internalQuery, mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
+import { action, internalAction, internalMutation, internalQuery, mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import { api, internal } from "./_generated/api";
 import OpenAI from "openai";
@@ -114,14 +114,74 @@ export const createDocument = mutation({
         // insert a new document into the documents table
         // with the title provided by the user
         // schema is defined in convex/schema.ts
-        await ctx.db.insert('documents', { title: args.title, tokenIdentifier: userId, fileId: args.fileId });
+        const documentId = await ctx.db.insert('documents', { title: args.title, tokenIdentifier: userId, fileId: args.fileId, description: "" });
+    
+        // queue a task to fill in the description for the document
+        await ctx.scheduler.runAfter(0, internal.documents.fillInDescription, {
+            fileId: args.fileId,
+            documentId
+        })
     }
+
 })
 
 // mutations have to be retriable
 
 //actions can't directly communicate with the database, 
 // you will need to evoke other mutations or queries and wait for them to complete
+
+export const fillInDescription = internalAction({
+    args: {
+        fileId: v.id('_storage'),
+        documentId: v.id('documents'),
+    },
+    async handler(ctx, args) {
+        const file = await ctx.storage.get(args.fileId);
+
+        if (!file) {
+            throw new ConvexError('File not found');
+        }
+
+        const text = await file.text();
+        // console.log("text file: ", text);
+
+        //use contents of file to ask OpenAI a question
+        const chatCompletion: OpenAI.Chat.ChatCompletion = await openai.chat.completions.create({
+            messages: [{
+                role: "system", content: `
+                Here is a text file: ${text}
+                `},
+            { role: "user", content: `Please generate a 1 sentence description for this document` }
+            ],
+            model: "gpt-3.5-turbo",
+        })
+
+
+        const response = chatCompletion.choices[0].message.content ?? "Could not generate description for this document";
+
+        // store AI response as a chat record
+        await ctx.runMutation(internal.documents.updateDocumentDescription, {
+            documentId: args.documentId,
+            description: response
+        })
+
+        return response;
+    }
+})
+
+
+export const updateDocumentDescription = internalMutation({
+    args: {
+        documentId: v.id('documents'),
+        description: v.string(),
+    },
+    async handler(ctx, args) {
+        await ctx.db.patch(args.documentId, {
+            description: args.description
+        })
+    }
+})
+// define an action to ask a question
 
 export const askQuestion = action({
     args: {

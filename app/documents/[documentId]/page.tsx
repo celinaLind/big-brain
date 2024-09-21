@@ -6,6 +6,7 @@ import { useQuery } from "convex/react"
 import { useEffect, useRef, useState } from "react";
 import ChatPanel from "./chat-panel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 export default function DocumentPage({
@@ -23,22 +24,6 @@ export default function DocumentPage({
     });
 
     useEffect(() => {
-        // const iframe = iframeRef.current;
-        // if (iframe && iframe.contentWindow) {
-        //     iframe.onload = () => {
-        //      const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
-        //     if (iframeDocument) {
-        //         const style = iframeDocument.createElement('style');
-        //         style.innerHTML = `
-        //             body {
-        //              color: white;
-        //              }`;
-        //         iframeDocument.head.appendChild(style);
-        //     }   
-        //     }
-
-        // }
-
         setTimeout(() => {
             setLoading(false);
         }, 500);
@@ -46,9 +31,18 @@ export default function DocumentPage({
     }, [])
 
     if (loading) {
-        return <div className="flex justify-center items-center h-screen">
-            Loading...
+        return (
+        <div className="space-y-8 p-24 pt-8">
+            <div>
+            <Skeleton className="h-[40px] w-[500px]" />
+            </div>
+            <div className="flex">
+                <Skeleton className="h-[40px] w-[80px]" />
+                <Skeleton className="h-[40px] w-[80px]" />
+            </div>
+            <Skeleton className="h-[500px]" />
         </div>
+        )
     }
 
     if (!doc) {
