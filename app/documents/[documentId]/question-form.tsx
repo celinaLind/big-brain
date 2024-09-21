@@ -29,7 +29,7 @@ export function QuestionForm({ documentId }: { documentId: Id<'documents'> }) {
         resolver: zodResolver(formSchema),
         defaultValues: {
             text: "",
-        }
+        },
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -37,7 +37,7 @@ export function QuestionForm({ documentId }: { documentId: Id<'documents'> }) {
             // await askQuestion({ question: values.text, documentId });
             //TODO: fix form reset (it is maintaining the text in the input field)
             form.reset();
-            // console.log("askQuestion function called successfully");
+            console.log("askQuestion function called successfully");
         } catch (error) {
             console.error("Error calling askQuestion: ", error);
         }
@@ -45,7 +45,8 @@ export function QuestionForm({ documentId }: { documentId: Id<'documents'> }) {
 
     return (
         <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className=" flex flex-1 gap-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} 
+            className=" flex flex-1 gap-2">
                 <FormField
                     control={form.control}
                     name="text"
