@@ -157,7 +157,7 @@ export const askQuestion = action({
             model: "gpt-3.5-turbo",
         })
 
-        // TODO: store user prompt as a chat record 
+        // store user prompt as a chat record 
         await ctx.runMutation(internal.chats.createChatRecord, {
             documentId: args.documentId,
             text: args.question,
@@ -167,7 +167,7 @@ export const askQuestion = action({
 
         const response = chatCompletion.choices[0].message.content ?? "Could not generate a response";
 
-        // TODO: store AI response as a chat record
+        // store AI response as a chat record
         await ctx.runMutation(internal.chats.createChatRecord, {
             documentId: args.documentId,
             text: response,

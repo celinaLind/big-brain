@@ -34,8 +34,7 @@ export function QuestionForm({ documentId }: { documentId: Id<'documents'> }) {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            // await askQuestion({ question: values.text, documentId });
-            //TODO: fix form reset (it is maintaining the text in the input field)
+            await askQuestion({ question: values.text, documentId });
             form.reset();
             console.log("askQuestion function called successfully");
         } catch (error) {
