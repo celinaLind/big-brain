@@ -76,3 +76,7 @@
 .header-text {
   color: white;
 }
+
+iframe body {
+   color: white;
+}
