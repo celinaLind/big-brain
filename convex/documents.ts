@@ -238,3 +238,23 @@ export const askQuestion = action({
         return response;
     }
 })
+
+export const deleteDocument = mutation({
+    args: {
+        documentId: v.id('documents'),
+    },
+    async handler(ctx, args) {
+        const accessObj = await hasAccessToDocument(ctx, {documentId: args.documentId});
+
+        if (!accessObj) {
+            throw new ConvexError('Document not found');
+        }
+
+        // delete the file from storage
+        await ctx.storage.delete(accessObj.document.fileId);
+        // TODO find out why using file id above and document id below
+        // delete the document from the documents table
+        await ctx.db.delete(args.documentId);
+    }
+    }
+)
