@@ -10,7 +10,7 @@ export function Header() {
             <div className="flex gap-12 item-center">
             <Link href="/" className="header-text text-2xl">BRAINIAX</Link>
             <nav>
-                <Link href='/' className="text-white hover:text-slate-300">Documents</Link>
+                <Link href='/dashboard' className="text-white hover:text-slate-300">Documents</Link>
             </nav>
             </div>
             <div className="flex gap-4 items-center">

@@ -12,6 +12,7 @@ import {
 import { UploadDocumentForm } from "./upload-document-form";
 import { useState } from "react";
 import { Upload } from "lucide-react";
+import { btnIconStyles, btnStyles } from "@/styles/styles";
 
   
   export default function CreateDocumentBtn() {
@@ -21,8 +22,8 @@ import { Upload } from "lucide-react";
             {/* asChild passes trigger styling to the child */}
             {/* click listener automatically applied to btn */}
           <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-                <Upload className="w-4 h-4" />
+            <Button className={btnStyles}>
+                <Upload className={btnIconStyles} />
                 Upload Document</Button>
           </DialogTrigger>
           <DialogContent>
