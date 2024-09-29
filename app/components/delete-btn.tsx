@@ -19,11 +19,16 @@ import { TrashIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
+//type param is if the item type is document or note 
 
-export function DeleteDocumentButton({ documentId }: { documentId: Id<'documents'> }) {
+export function DeleteItemButton({ documentId, noteId, itemType }: { documentId?: Id<'documents'>, noteId?: Id<"notes">, itemType: string }) {
     const [isLoading, setIsLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const deleteDocument = useMutation(api.documents.deleteDocument)
+    if(!documentId && !noteId) {
+        console.log("Error: you are missing an id")
+    }
+
+    const deleteItem = documentId ? useMutation(api.documents.deleteDocument) : useMutation(api.notes.deleteNote);
     const router = useRouter();
 
     return (
@@ -33,25 +38,28 @@ export function DeleteDocumentButton({ documentId }: { documentId: Id<'documents
                 onClick={() => {
                     setIsOpen(true)
                 }}>
-                    <TrashIcon className={btnIconStyles} />
-                    Delete</Button>
+                    <TrashIcon className={btnIconStyles} /></Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Are you sure you want to delete this document?</AlertDialogTitle>
+                    <AlertDialogTitle>Are you sure you want to delete this {itemType}?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the document.
+                        This action cannot be undone. This will permanently delete the {itemType}.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel onClick={() => setIsOpen(false)}>Cancel</AlertDialogCancel>
                     {/* <AlertDialogAction> */}
                         <LoadingButton
                             isLoading={isLoading}
                             clickHandler={() => { 
                                 setIsLoading(true)
-                                deleteDocument({ documentId })
-                                router.push("/")
+                                if (documentId) {
+                                    deleteItem({ documentId })
+                                } else if (noteId) {
+                                    deleteItem({ noteId })
+                                }
+                                router.push(`/dashboard/${itemType}s`)
                                 setIsLoading(false)
                                 // .catch((error) => {
                                 //     console.error("Error deleting document:", error);

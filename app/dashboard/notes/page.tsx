@@ -7,7 +7,7 @@
 
 export default function NotesPage() {
     return (
-        <div className="w-full items-center justify-items-center gap-16 font-[family-name:var(--font-geist-sans)]">
+        <div className="w-full items-center justify-items-center gap-16 font-[family-name:var(--font-geist-sans)] text-xl">
             Please Select Note
         </div>
     );

@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TrashIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { btnIconStyles, btnStyles } from "@/styles/styles";
-import { DeleteDocumentButton } from "./delete-btn";
+import { DeleteItemButton } from "../../../components/delete-btn";
 
 
 export default function DocumentPage({
@@ -48,7 +48,7 @@ export default function DocumentPage({
                     <>
                         <div className="flex justify-between items-center">
                             <h1 className="text-4xl font-bold">{doc.title}</h1>
-                            <DeleteDocumentButton documentId={doc._id} />
+                            <DeleteItemButton documentId={doc._id} itemType="document" />
                         </div>
                         <Tabs defaultValue="document" className="w-full">
                             <TabsList>
