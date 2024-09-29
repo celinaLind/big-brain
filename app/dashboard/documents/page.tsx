@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Card } from "@/components/ui/card";
 import Image from 'next/image';
 
+// TODO: add toast after document uploaded
 
 export default function DashboardPage() {
 

@@ -36,7 +36,6 @@ const formSchema = z.object({
    }),
 })
 
-// TODO: update comments on this page
 
 
 export function CreateNoteForm({ onCreate }: { onCreate: () => void }) {

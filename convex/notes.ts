@@ -1,6 +1,34 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
+export const getNote = query({
+    args:{
+        noteId: v.id("notes")
+    },
+    async handler(ctx, args) {
+        // verify user is authenticated/logged in
+        const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier
+
+        if(!userId) {
+            return null
+        }
+
+        // verify note exists
+        const note = await ctx.db.get(args.noteId);
+
+        if (!note) {
+            return null
+        }
+
+        // verify user has access to the note
+        if ( note.tokenIdentifier != userId ) {
+            return null
+        }
+
+        return note;
+    }
+})
+
 export const getNotes = query({
     async handler(ctx) {
         const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
@@ -8,9 +36,14 @@ export const getNotes = query({
         if (!userId) {
             return null;
         }
-        // TODO: add getnotes query so you can display notes on the frontend
+        
+        const notes = await ctx.db
+        .query("notes")
+        .withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", userId))
+        .order("desc")
+        .collect();
 
-        return "notes"
+        return notes;
     }
 })
 

@@ -1,14 +1,14 @@
-import CreateNoteBtn from "./create-note-btn";
+/*
+    Since we have created a layout file with parallel routing 
+    this page has become the fallback page when a note 
+    has note been selected
+*/
+"use client"
 
 export default function NotesPage() {
     return (
         <div className="w-full items-center justify-items-center gap-16 font-[family-name:var(--font-geist-sans)]">
-            <main className="flex flex-col gap-8 row-start-2 ">
-                <div className="flex justify-between items-center gap-4">
-                    <h1 className="text-4xl font-bold">My Notes</h1>
-                    <CreateNoteBtn />
-                </div>
-            </main>
+            Please Select Note
         </div>
     );
 }

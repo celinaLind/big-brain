@@ -9,8 +9,8 @@ export function Header() {
         <div className="container mx-auto flex justify-between items-center">
             <div className="flex gap-12 item-center">
             <Link href="/" className="header-text text-2xl">BRAINIAX</Link>
-            <nav>
-                <Link href='/dashboard' className="text-white hover:text-slate-300">Documents</Link>
+            <nav className="m-auto">
+                <Link href='/dashboard' className="text-white hover:text-cyan-200">Documents</Link>
             </nav>
             </div>
             <div className="flex gap-4 items-center">

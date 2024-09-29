@@ -5,13 +5,18 @@ import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 export function HeaderActions() {
     return <>
         <Unauthenticated>
-            <SignInButton />
+            <span className="text-white hover:text-cyan-200">
+            <SignInButton /></span>
         </Unauthenticated>
         
         <Authenticated>
             <UserButton />
         </Authenticated>
 
-        <AuthLoading>Loading...</AuthLoading>
+        <AuthLoading>
+            <span className='text-white hover:text-cyan-200'>
+                Loading...
+                </span>
+                </AuthLoading>
     </>
 }
