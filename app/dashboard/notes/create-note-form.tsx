@@ -31,7 +31,7 @@ const formSchema = z.object({
       {
         message: "Notes must be at least 1 character long",
      },
-   ).max(2500, {
+   ).max(5000, {
        message: "Notes must be less than 2500 characters",
    }),
 })

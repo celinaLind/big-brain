@@ -19,5 +19,15 @@ export default defineSchema({
         title: v.string(),
         tokenIdentifier: v.string(),
         text: v.string(),
-    }).index("by_tokenIdentifier", ["tokenIdentifier"]),
-});
+        // you can name the embedding value anything but the type must be v.array(...)
+        // v.optional means the value is not required and can be given later
+        embedding: v.optional(v.array(v.float64())),
+    }).vectorIndex("by_embedding", {
+      vectorField: "embedding",
+      dimensions: 1536,
+      filterFields: ["tokenIdentifier"],
+    }).index("by_tokenIdentifier", ["tokenIdentifier"])
+})
+    ;
+
+    // Vector search allows you to find Convex documents similar to a provided vector.
