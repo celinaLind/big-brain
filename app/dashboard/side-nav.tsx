@@ -27,6 +27,11 @@ export default function SideNav() {
                         <Link href="/dashboard/notes">Notes</Link>
                     </li>
                     <li className={cn("text-xl flex gap-2 items-center hover:text-cyan-300",  
+                        {'text-cyan-400': pathname.endsWith("/search") || pathname.includes("/dashboard/search/")})}>
+                        <Clipboard className="w-6 h-6" />
+                        <Link href="/dashboard/search">Search</Link>
+                    </li>
+                    <li className={cn("text-xl flex gap-2 items-center hover:text-cyan-300",  
                         {'text-cyan-400': pathname.endsWith("/settings") || pathname.includes("/dashboard/settings/")})}>
                         <Settings className="w-6 h-6" />
                         <Link href="/dashboard/settings">Settings</Link>

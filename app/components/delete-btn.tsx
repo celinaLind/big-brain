@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { api } from "@/convex/_generated/api"
 import { Id } from "@/convex/_generated/dataModel"
+import { useToast } from "@/hooks/use-toast"
 import { btnIconStyles, btnStyles } from "@/styles/styles"
 import { useMutation } from "convex/react"
 import { TrashIcon } from "lucide-react"
@@ -24,6 +25,8 @@ import { useState } from "react"
 export function DeleteItemButton({ documentId, noteId, itemType }: { documentId?: Id<'documents'>, noteId?: Id<"notes">, itemType: string }) {
     const [isLoading, setIsLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+  const { toast } = useToast()
+
     if(!documentId && !noteId) {
         console.log("Error: you are missing an id")
     }
@@ -59,7 +62,13 @@ export function DeleteItemButton({ documentId, noteId, itemType }: { documentId?
                                 } else if (noteId) {
                                     deleteItem({ noteId })
                                 }
+                                // TODO: verfify that the toast is working...
+                                toast({
+                                    title: "Deleted",
+                                    description: "Deletion was successful",
+                                  })
                                 router.push(`/dashboard/${itemType}s`)
+                                
                                 setIsLoading(false)
                                 // .catch((error) => {
                                 //     console.error("Error deleting document:", error);

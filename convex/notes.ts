@@ -56,7 +56,6 @@ export const getNotes = query({
 export async function embed(text: string) {
     const embedding = await openai.embeddings.create({
         model: "text-embedding-ada-002",
-        dimensions: 1536,
         input: text
     })
 
@@ -103,7 +102,7 @@ export const setNoteEmbedding = internalMutation({
         embedding: v.array(v.number())
     },
     async handler (ctx, args) {
-        const notes = ctx.db.patch(args.noteId, {
+        await ctx.db.patch(args.noteId, {
             embedding: args.embedding
         })
     }
@@ -119,7 +118,7 @@ export const createNoteEmbedding = internalAction({
 
         // returns an array of numbers or floats to compare to questions later
         const embedding = await embed(args.text);
-
+        console.log("CreateNoteEmbedding: ", embedding)
         await ctx.runMutation(internal.notes.setNoteEmbedding, {
             noteId: args.noteId,
             embedding
